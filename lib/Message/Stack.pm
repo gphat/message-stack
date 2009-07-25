@@ -2,12 +2,15 @@ package Message::Stack;
 use Moose;
 use MooseX::AttributeHelpers;
 
+use Message::Stack::Types;
+
 our $VERSION = '0.01';
 
 has messages => (
     metaclass => 'Collection::Array',
     is => 'rw',
-    isa => 'ArrayRef',
+    isa => 'ArrayRef[Message]',
+    coerce => 1,
     default => sub { [] },
     provides => {
         clear => 'reset',
@@ -20,6 +23,63 @@ has messages => (
     }
 );
 
+sub get_messages_for_level {
+    my ($self, $level) = @_;
+
+    return 0 unless $self->has_messages;
+
+    my @messages = ();
+    foreach my $m (@{ $self->messages }) {
+        next unless defined($m->level);
+        push(@messages, $m) if $m->level eq $level;
+    }
+
+    return \@messages;
+}
+
+sub get_messages_for_scope {
+    my ($self, $scope) = @_;
+
+    return 0 unless $self->has_messages;
+
+    my @messages = ();
+    foreach my $m (@{ $self->messages }) {
+        next unless defined($m->scope);
+        push(@messages, $m) if $m->scope eq $scope;
+    }
+
+    return \@messages;
+}
+
+sub has_messages_for_level {
+    my ($self, $level) = @_;
+
+    return 0 unless $self->has_messages;
+
+    foreach my $m (@{ $self->messages }) {
+        next unless defined($m->level);
+        return 1 if $m->level eq $level;
+    }
+
+    return 0;
+}
+
+sub has_messages_for_scope {
+    my ($self, $scope) = @_;
+
+    return 0 unless $self->has_messages;
+
+    foreach my $m (@{ $self->messages }) {
+        next unless defined($m->scope);
+        return 1 if $m->scope eq $scope;
+    }
+
+    return 0;
+}
+
+
+__PACKAGE__->meta->make_immutable;
+no Moose;
 1;
 
 __END__
@@ -33,6 +93,55 @@ Message::Stack - Deal with a "stack" of messages
   my $stack = Message::Stack->new;
 
   $stack->add_to_messages(...);
+
+=head1 DESCRIPTION
+
+Message::Stack provides a mechanism for storing messages until they can be
+consumed.  A stack is used to retain order of occurrence.
+
+This is not a logging mechanism.  The original use was to store various errors
+or messages that occur during processing for later display in a web
+application.  The messages are added via C<add_message>.
+
+=head1 METHODS
+
+=head2 add_to_messages ($message)
+
+Adds the supplied message to the stack.
+
+=head2 count
+
+Returns the number of messages in the stack.
+
+=head2 first_message
+
+Returns the first message (if there is one, else undef)
+
+=head2 get_message ($index)
+
+Get the message at the supplied index.
+
+=head2 get_messages_for_level ($level)
+
+Returns an arrayref of Message::Stack::Message objects with the supplied
+level.  If there are no messages for that level then the arrayref will be
+empty.
+
+=head2 has_messages
+
+Returns true if there are messages in the stack, else false
+
+=head2 has_messages_for_level ($level)
+
+Returns true if there are messages with the supplied level.
+
+=head2 has_messages_for_scope ($scope)
+
+Returns true if there are messages with the supplied scope.
+
+=head2 last_message
+
+Returns the last message (if there is one, else undef)
 
 =head1 AUTHOR
 
