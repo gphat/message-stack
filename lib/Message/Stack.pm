@@ -2,15 +2,15 @@ package Message::Stack;
 use Moose;
 use MooseX::AttributeHelpers;
 
-use Message::Stack::Types;
+use Carp qw(croak);
+use Check::ISA;
 
 our $VERSION = '0.01';
 
 has messages => (
     metaclass => 'Collection::Array',
     is => 'rw',
-    isa => 'ArrayRef[Message]',
-    coerce => 1,
+    isa => 'ArrayRef[Message::Stack::Message]',
     default => sub { [] },
     provides => {
         clear => 'reset',
@@ -19,9 +19,23 @@ has messages => (
         first => 'first_message',
         get => 'get_message',
         last => 'last_message',
-        push => 'add_to_messages',
     }
 );
+
+sub add_to_messages {
+    my ($self, $message) = @_;
+
+    return unless defined($message);
+
+    if(obj($message, 'Message::Stack::Message')) {
+        push(@{ $self->messages }, $message);
+    } elsif(ref($message) eq 'HASH') {
+        my $mess = Message::Stack::Message->new($message);
+        push(@{ $self->messages }, $mess);
+    } else {
+        croak('Message must be either a Message::Stack::Message or hashref');
+    }
+}
 
 sub get_messages_for_level {
     my ($self, $level) = @_;
@@ -34,7 +48,9 @@ sub get_messages_for_level {
         push(@messages, $m) if $m->level eq $level;
     }
 
-    return \@messages;
+    return Message::Stack->new(
+        messages => \@messages
+    );
 }
 
 sub get_messages_for_scope {
@@ -48,7 +64,9 @@ sub get_messages_for_scope {
         push(@messages, $m) if $m->scope eq $scope;
     }
 
-    return \@messages;
+    return Message::Stack->new(
+        messages => \@messages
+    );
 }
 
 sub has_messages_for_level {
@@ -92,12 +110,24 @@ Message::Stack - Deal with a "stack" of messages
 
   my $stack = Message::Stack->new;
 
-  $stack->add_to_messages(...);
+  $stack->add_to_messages(Message::Stack::Message->new(
+      id        => 'something_happened',
+      level     => 'error',
+      scope     => 'login_form',
+      subject   => 'username',
+      text      => 'Something happened!'
+  ));
+  ...
+  my $errors = $stack->get_messages_for_level($error);
+  # Or
+  my $login_form_errors = $stack->get_messges_for_scope('login_form');
 
 =head1 DESCRIPTION
 
 Message::Stack provides a mechanism for storing messages until they can be
-consumed.  A stack is used to retain order of occurrence.
+consumed.  A stack is used to retain order of occurrence.  Each message may
+have a level, scope, subject and text.  Consult the documentation for
+L<Message::Stack::Message> for an explanation of these attributes.
 
 This is not a logging mechanism.  The original use was to store various errors
 or messages that occur during processing for later display in a web
@@ -107,7 +137,8 @@ application.  The messages are added via C<add_message>.
 
 =head2 add_to_messages ($message)
 
-Adds the supplied message to the stack.
+Adds the supplied message to the stack.  C<$message> may be either a
+L<Message::Stack::Message> object or a hashref with similar keys.
 
 =head2 count
 
@@ -123,9 +154,15 @@ Get the message at the supplied index.
 
 =head2 get_messages_for_level ($level)
 
-Returns an arrayref of Message::Stack::Message objects with the supplied
-level.  If there are no messages for that level then the arrayref will be
-empty.
+Returns a new Message::Stack containing only the  message objects with the
+supplied level. If there are no messages for that level then the stack
+returned will have no messages.
+
+=head2 get_messages_for_scope ($scope)
+
+Returns a new Message::Stack containing only the  message objects with the
+supplied scope. If there are no messages for that scope then the stack
+returned will have no messages.
 
 =head2 has_messages
 

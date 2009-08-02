@@ -5,11 +5,11 @@ all_from 'lib/Message/Stack.pm';
 author   'Cory G Watson <gphat@cpan.org>';
 license  'perl';
 
-build_requires 'Test::More';
+build_requires 'Test::More' => '0.92';
 
+requires 'Check::ISA' => '0.04';
 requires 'Moose' => '0.87';
 requires 'MooseX::AttributeHelpers' => '0.20';
-requires 'MooseX::Types';
 
 WriteAll;
 
