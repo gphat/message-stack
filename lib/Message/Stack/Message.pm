@@ -27,7 +27,6 @@ has text => (
 );
 
 __PACKAGE__->meta->make_immutable;
-
 no Moose;
 1;
 
@@ -53,7 +52,38 @@ Message::Stack::Message - A Message
 
 =head1 DESCRIPTION
 
-The Message object formalizes the messages that are added to the stack.
+The Message object formalizes the messages that are added to the stack.  None
+of the fields are required, as it's up to the developer to deside what to use.
+
+=head1 ATTRIBUTES
+
+=head2 id
+
+String identifier for this message.  Intended for use with gettext or similar
+I18N mechanisms wherein a message id is used to idenfity the translated
+text for a message.
+
+=head2 level
+
+String attribute used to describe the level of this message.  Intended for use
+with strings like 'error' or 'info'.
+
+=head2 scope
+
+String idenfitying the scope of a message.  Used for cases when multiple
+subsystems might be emitting messages and a mechanism for grouping them is
+necessary.  A common case would be a form with multiple fieldsets.
+
+=head2 subject
+
+String identifying the subject of a message.  Used to identify a particular
+element to which this message is pertinent.  Common case is an individual
+field in a form.
+
+=head2 text
+
+String containing the human readable form of the message.  Often used in
+situations when I18N is not required.
 
 =head1 AUTHOR
 
