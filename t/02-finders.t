@@ -8,6 +8,7 @@ use Message::Stack::Message;
 my $stack = Message::Stack->new;
 
 $stack->add({
+    id => 'messageone',
     text => 'Foo',
     level => 'error',
     scope => 'bar',
@@ -20,6 +21,14 @@ $stack->add({
     scope => 'baz',
     subject => 'clown'
 });
+
+my $clownstack = $stack->search( sub { $_[0]->subject eq 'clown' } );
+cmp_ok($clownstack->count, '==', 1, 'search');
+
+ok($stack->has_messages_for_id('messageone'), 'has_messages_for_id');
+my $ids = $stack->get_messages_for_id('messageone');
+cmp_ok($ids->count, '==', 1, 'get_messages_for_id: 1');
+cmp_ok($ids->has_messages_for_id('info'), '==', 0, 'has_messages_for_id on retval');
 
 ok($stack->has_messages_for_level('info'), 'has_messages_for_level');
 my $errors = $stack->get_messages_for_level('error');

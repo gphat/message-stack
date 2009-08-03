@@ -16,7 +16,9 @@ has messages => (
         clear => 'reset',
         count => 'count',
         empty => 'has_messages',
+        find => '_find_message',
         first => 'first_message',
+        grep => '_grep_messages',
         get => 'get_message',
         last => 'last_message',
     }
@@ -37,52 +39,36 @@ sub add {
     }
 }
 
+sub get_messages_for_id {
+    my ($self, $id) = @_;
+
+    return $self->search(sub { $_[0]->id eq $id });
+}
+
 sub get_messages_for_level {
     my ($self, $level) = @_;
 
-    return 0 unless $self->has_messages;
-
-    my @messages = ();
-    foreach my $m (@{ $self->messages }) {
-        next unless defined($m->level);
-        push(@messages, $m) if $m->level eq $level;
-    }
-
-    return Message::Stack->new(
-        messages => \@messages
-    );
+    return $self->search(sub { $_[0]->level eq $level });
 }
 
 sub get_messages_for_scope {
     my ($self, $scope) = @_;
 
-    return 0 unless $self->has_messages;
-
-    my @messages = ();
-    foreach my $m (@{ $self->messages }) {
-        next unless defined($m->scope);
-        push(@messages, $m) if $m->scope eq $scope;
-    }
-
-    return Message::Stack->new(
-        messages => \@messages
-    );
+    return $self->search(sub { $_[0]->scope eq $scope });
 }
 
 sub get_messages_for_subject {
     my ($self, $subject) = @_;
 
+    return $self->search(sub { $_[0]->subject eq $subject });
+}
+
+sub has_messages_for_id {
+    my ($self, $id) = @_;
+
     return 0 unless $self->has_messages;
 
-    my @messages = ();
-    foreach my $m (@{ $self->messages }) {
-        next unless defined($m->subject);
-        push(@messages, $m) if $m->subject eq $subject;
-    }
-
-    return Message::Stack->new(
-        messages => \@messages
-    );
+    return defined($self->_find_message(sub { $_[0]->id eq $id })) ? 1 : 0;
 }
 
 sub has_messages_for_level {
@@ -90,12 +76,7 @@ sub has_messages_for_level {
 
     return 0 unless $self->has_messages;
 
-    foreach my $m (@{ $self->messages }) {
-        next unless defined($m->level);
-        return 1 if $m->level eq $level;
-    }
-
-    return 0;
+    return defined($self->_find_message(sub { $_[0]->level eq $level })) ? 1 : 0;
 }
 
 sub has_messages_for_scope {
@@ -103,12 +84,7 @@ sub has_messages_for_scope {
 
     return 0 unless $self->has_messages;
 
-    foreach my $m (@{ $self->messages }) {
-        next unless defined($m->scope);
-        return 1 if $m->scope eq $scope;
-    }
-
-    return 0;
+    return defined($self->_find_message(sub { $_[0]->scope eq $scope })) ? 1 : 0;
 }
 
 sub has_messages_for_subject {
@@ -116,12 +92,14 @@ sub has_messages_for_subject {
 
     return 0 unless $self->has_messages;
 
-    foreach my $m (@{ $self->messages }) {
-        next unless defined($m->subject);
-        return 1 if $m->subject eq $subject;
-    }
+    return defined($self->_find_message(sub { $_[0]->subject eq $subject })) ? 1 : 0;
+}
 
-    return 0;
+sub search {
+    my ($self, $coderef) = @_;
+
+    my @messages = $self->_grep_messages($coderef);
+    return Message::Stack->new(messages => \@messages);
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -175,6 +153,13 @@ Returns the number of messages in the stack.
 =head2 first_message
 
 Returns the first message (if there is one, else undef)
+
+head2 search (CODEREF)
+
+Returns a Message::Stack containing messages that return true when passed
+to the coderef argument.
+
+  $stack->find( sub { $_[0]->id eq 'someid' } )
 
 =head2 get_message ($index)
 
