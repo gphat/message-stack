@@ -10,13 +10,13 @@ isa_ok($stack, 'Message::Stack');
 
 ok(!$stack->has_messages, 'stack is empty');
 
-$stack->add_to_messages({ text => 'Foo' });
+$stack->add({ text => 'Foo' });
 
 cmp_ok($stack->count, '==', 1, 'message count after hash');
 
 ok($stack->has_messages, 'stack has messages');
 
-$stack->add_to_messages(Message::Stack::Message->new(
+$stack->add(Message::Stack::Message->new(
     text => 'Bar'
 ));
 

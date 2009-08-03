@@ -5,7 +5,7 @@ use MooseX::AttributeHelpers;
 use Carp qw(croak);
 use Check::ISA;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 has messages => (
     metaclass => 'Collection::Array',
@@ -22,7 +22,7 @@ has messages => (
     }
 );
 
-sub add_to_messages {
+sub add {
     my ($self, $message) = @_;
 
     return unless defined($message);
@@ -69,6 +69,22 @@ sub get_messages_for_scope {
     );
 }
 
+sub get_messages_for_subject {
+    my ($self, $subject) = @_;
+
+    return 0 unless $self->has_messages;
+
+    my @messages = ();
+    foreach my $m (@{ $self->messages }) {
+        next unless defined($m->subject);
+        push(@messages, $m) if $m->subject eq $subject;
+    }
+
+    return Message::Stack->new(
+        messages => \@messages
+    );
+}
+
 sub has_messages_for_level {
     my ($self, $level) = @_;
 
@@ -95,6 +111,18 @@ sub has_messages_for_scope {
     return 0;
 }
 
+sub has_messages_for_subject {
+    my ($self, $subject) = @_;
+
+    return 0 unless $self->has_messages;
+
+    foreach my $m (@{ $self->messages }) {
+        next unless defined($m->subject);
+        return 1 if $m->subject eq $subject;
+    }
+
+    return 0;
+}
 
 __PACKAGE__->meta->make_immutable;
 no Moose;
@@ -110,7 +138,7 @@ Message::Stack - Deal with a "stack" of messages
 
   my $stack = Message::Stack->new;
 
-  $stack->add_to_messages(Message::Stack::Message->new(
+  $stack->add(Message::Stack::Message->new(
       id        => 'something_happened',
       level     => 'error',
       scope     => 'login_form',
@@ -135,7 +163,7 @@ application.  The messages are added via C<add_message>.
 
 =head1 METHODS
 
-=head2 add_to_messages ($message)
+=head2 add ($message)
 
 Adds the supplied message to the stack.  C<$message> may be either a
 L<Message::Stack::Message> object or a hashref with similar keys.
@@ -154,14 +182,20 @@ Get the message at the supplied index.
 
 =head2 get_messages_for_level ($level)
 
-Returns a new Message::Stack containing only the  message objects with the
+Returns a new Message::Stack containing only the message objects with the
 supplied level. If there are no messages for that level then the stack
 returned will have no messages.
 
 =head2 get_messages_for_scope ($scope)
 
-Returns a new Message::Stack containing only the  message objects with the
+Returns a new Message::Stack containing only the message objects with the
 supplied scope. If there are no messages for that scope then the stack
+returned will have no messages.
+
+=head2 get_messages_for_subject ($subject)
+
+Returns a new Message::Stack containing only the message objects with the
+supplied subject. If there are no messages for that subject then the stack
 returned will have no messages.
 
 =head2 has_messages
@@ -175,6 +209,10 @@ Returns true if there are messages with the supplied level.
 =head2 has_messages_for_scope ($scope)
 
 Returns true if there are messages with the supplied scope.
+
+=head2 has_messages_for_subject ($subject)
+
+Returns true if there are messages with the supplied subject.
 
 =head2 last_message
 

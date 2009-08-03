@@ -40,7 +40,7 @@ Message::Stack::Message - A Message
 
   my $stack = Message::Stack->new;
 
-  $stack->add_to_messages(
+  $stack->add(
     Message::Stack::Message->new(
         id => 'I18NName',
         level => 'error',
