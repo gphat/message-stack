@@ -3,27 +3,32 @@ use Moose;
 
 has id => (
     is => 'rw',
-    isa => 'Maybe[Str]'
+    isa => 'Maybe[Str]',
+    predicate => 'has_id'
 );
 
 has level => (
     is => 'rw',
-    isa => 'Maybe[Str]'
+    isa => 'Maybe[Str]',
+    predicate => 'has_level'
 );
 
 has scope => (
     is => 'rw',
-    isa => 'Maybe[Str]'
+    isa => 'Maybe[Str]',
+    predicate => 'has_scope'
 );
 
 has subject => (
     is => 'rw',
-    isa => 'Maybe[Str]'
+    isa => 'Maybe[Str]',
+    predicate => 'has_subject'
 );
 
 has text => (
     is => 'rw',
-    isa => 'Maybe[Str]'
+    isa => 'Maybe[Str]',
+    predicate => 'has_text'
 );
 
 __PACKAGE__->meta->make_immutable;
