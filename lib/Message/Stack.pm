@@ -136,12 +136,14 @@ Message::Stack - Deal with a "stack" of messages
   my $errors = $stack->get_messages_for_level($error);
   # Or
   my $login_form_errors = $stack->get_messges_for_scope('login_form');
+  $login_form_errors->get_messages_for_id('username');
+  print "Username has ".$login_form_errors->count." errors.\n";
 
 =head1 DESCRIPTION
 
 Message::Stack provides a mechanism for storing messages until they can be
 consumed.  A stack is used to retain order of occurrence.  Each message may
-have a level, scope, subject and text.  Consult the documentation for
+have a id, level, scope, subject and text.  Consult the documentation for
 L<Message::Stack::Message> for an explanation of these attributes.
 
 This is not a logging mechanism.  The original use was to store various errors
@@ -174,6 +176,12 @@ to the coderef argument.
 
 Get the message at the supplied index.
 
+=head2 get_messages_for_id ($id)
+
+Returns a new Message::Stack containing only the message objects with the
+supplied id. If there are no messages for that level then the stack
+returned will have no messages.
+
 =head2 get_messages_for_level ($level)
 
 Returns a new Message::Stack containing only the message objects with the
@@ -195,6 +203,10 @@ returned will have no messages.
 =head2 has_messages
 
 Returns true if there are messages in the stack, else false
+
+=head2 has_messages_for_id ($id)
+
+Returns true if there are messages with the supplied id.
 
 =head2 has_messages_for_level ($level)
 
