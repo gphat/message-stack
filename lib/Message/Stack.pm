@@ -42,25 +42,25 @@ sub add {
 sub get_messages_for_id {
     my ($self, $id) = @_;
 
-    return $self->search(sub { $_[0]->id eq $id });
+    return $self->search(sub { $_[0]->id eq $id if $_[0]->has_id });
 }
 
 sub get_messages_for_level {
     my ($self, $level) = @_;
 
-    return $self->search(sub { $_[0]->level eq $level });
+    return $self->search(sub { $_[0]->level eq $level if $_[0]->has_level });
 }
 
 sub get_messages_for_scope {
     my ($self, $scope) = @_;
 
-    return $self->search(sub { $_[0]->scope eq $scope });
+    return $self->search(sub { $_[0]->scope eq $scope if $_[0]->has_scope });
 }
 
 sub get_messages_for_subject {
     my ($self, $subject) = @_;
 
-    return $self->search(sub { $_[0]->subject eq $subject });
+    return $self->search(sub { $_[0]->subject eq $subject if $_[0]->has_subject });
 }
 
 sub has_messages_for_id {
@@ -68,7 +68,7 @@ sub has_messages_for_id {
 
     return 0 unless $self->has_messages;
 
-    return defined($self->_find_message(sub { $_[0]->id eq $id })) ? 1 : 0;
+    return $self->get_messages_for_id($id)->count ? 1 : 0;
 }
 
 sub has_messages_for_level {
@@ -76,7 +76,7 @@ sub has_messages_for_level {
 
     return 0 unless $self->has_messages;
 
-    return defined($self->_find_message(sub { $_[0]->level eq $level })) ? 1 : 0;
+    return $self->get_messages_for_level($level)->count ? 1 : 0;
 }
 
 sub has_messages_for_scope {
@@ -84,7 +84,7 @@ sub has_messages_for_scope {
 
     return 0 unless $self->has_messages;
 
-    return defined($self->_find_message(sub { $_[0]->scope eq $scope })) ? 1 : 0;
+    return $self->get_messages_for_scope($scope)->count ? 1 : 0;
 }
 
 sub has_messages_for_subject {
@@ -92,7 +92,7 @@ sub has_messages_for_subject {
 
     return 0 unless $self->has_messages;
 
-    return defined($self->_find_message(sub { $_[0]->subject eq $subject })) ? 1 : 0;
+    return $self->get_messages_for_subject($subject)->count ? 1 : 0;
 }
 
 sub search {
