@@ -123,6 +123,15 @@ Message::Stack - Deal with a "stack" of messages
       subject   => 'username',
       text      => 'Something happened!'
   ));
+  # Or... for those that want to type less
+  $stack->add({
+      id        => 'something_else_happened',
+      level     => 'error',
+      scope     => 'login_form',
+      subject   => 'password',
+      text      => 'Something else happened!'
+  });
+  
   ...
   my $errors = $stack->get_messages_for_level($error);
   # Or
@@ -137,7 +146,7 @@ L<Message::Stack::Message> for an explanation of these attributes.
 
 This is not a logging mechanism.  The original use was to store various errors
 or messages that occur during processing for later display in a web
-application.  The messages are added via C<add_message>.
+application.  The messages are added via C<add>.
 
 =head1 METHODS
 
