@@ -6,7 +6,7 @@ use Carp qw(croak);
 use Check::ISA;
 use MooseX::Storage;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 with Storage('format' => 'JSON', io => 'File');
 
@@ -66,7 +66,7 @@ sub for_subject {
     return $self->search(sub { $_[0]->subject eq $subject if $_[0]->has_subject });
 }
 
-sub for_id {
+sub has_for_id {
     my ($self, $id) = @_;
 
     return 0 unless $self->has_messages;
