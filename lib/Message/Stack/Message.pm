@@ -1,6 +1,10 @@
 package Message::Stack::Message;
 use Moose;
 
+use MooseX::Storage;
+
+with Storage('format' => 'JSON', io => 'File');
+
 has id => (
     is => 'rw',
     isa => 'Maybe[Str]',

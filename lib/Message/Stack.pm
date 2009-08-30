@@ -4,8 +4,11 @@ use MooseX::AttributeHelpers;
 
 use Carp qw(croak);
 use Check::ISA;
+use MooseX::Storage;
 
 our $VERSION = '0.02';
+
+with Storage('format' => 'JSON', io => 'File');
 
 has messages => (
     metaclass => 'Collection::Array',
@@ -39,60 +42,60 @@ sub add {
     }
 }
 
-sub get_messages_for_id {
+sub for_id {
     my ($self, $id) = @_;
 
     return $self->search(sub { $_[0]->id eq $id if $_[0]->has_id });
 }
 
-sub get_messages_for_level {
+sub for_level {
     my ($self, $level) = @_;
 
     return $self->search(sub { $_[0]->level eq $level if $_[0]->has_level });
 }
 
-sub get_messages_for_scope {
+sub for_scope {
     my ($self, $scope) = @_;
 
     return $self->search(sub { $_[0]->scope eq $scope if $_[0]->has_scope });
 }
 
-sub get_messages_for_subject {
+sub for_subject {
     my ($self, $subject) = @_;
 
     return $self->search(sub { $_[0]->subject eq $subject if $_[0]->has_subject });
 }
 
-sub has_messages_for_id {
+sub for_id {
     my ($self, $id) = @_;
 
     return 0 unless $self->has_messages;
 
-    return $self->get_messages_for_id($id)->count ? 1 : 0;
+    return $self->for_id($id)->count ? 1 : 0;
 }
 
-sub has_messages_for_level {
+sub has_for_level {
     my ($self, $level) = @_;
 
     return 0 unless $self->has_messages;
 
-    return $self->get_messages_for_level($level)->count ? 1 : 0;
+    return $self->for_level($level)->count ? 1 : 0;
 }
 
-sub has_messages_for_scope {
+sub has_for_scope {
     my ($self, $scope) = @_;
 
     return 0 unless $self->has_messages;
 
-    return $self->get_messages_for_scope($scope)->count ? 1 : 0;
+    return $self->for_scope($scope)->count ? 1 : 0;
 }
 
-sub has_messages_for_subject {
+sub has_for_subject {
     my ($self, $subject) = @_;
 
     return 0 unless $self->has_messages;
 
-    return $self->get_messages_for_subject($subject)->count ? 1 : 0;
+    return $self->for_subject($subject)->count ? 1 : 0;
 }
 
 sub search {
@@ -133,10 +136,10 @@ Message::Stack - Deal with a "stack" of messages
   });
   
   ...
-  my $errors = $stack->get_messages_for_level($error);
+  my $errors = $stack->for_level($error);
   # Or
-  my $login_form_errors = $stack->get_messges_for_scope('login_form');
-  $login_form_errors->get_messages_for_id('username');
+  my $login_form_errors = $stack->for_scope('login_form');
+  $login_form_errors->for_id('username');
   print "Username has ".$login_form_errors->count." errors.\n";
 
 =head1 DESCRIPTION
@@ -176,25 +179,25 @@ to the coderef argument.
 
 Get the message at the supplied index.
 
-=head2 get_messages_for_id ($id)
+=head2 for_id ($id)
 
 Returns a new Message::Stack containing only the message objects with the
 supplied id. If there are no messages for that level then the stack
 returned will have no messages.
 
-=head2 get_messages_for_level ($level)
+=head2 for_level ($level)
 
 Returns a new Message::Stack containing only the message objects with the
 supplied level. If there are no messages for that level then the stack
 returned will have no messages.
 
-=head2 get_messages_for_scope ($scope)
+=head2 for_scope ($scope)
 
 Returns a new Message::Stack containing only the message objects with the
 supplied scope. If there are no messages for that scope then the stack
 returned will have no messages.
 
-=head2 get_messages_for_subject ($subject)
+=head2 for_subject ($subject)
 
 Returns a new Message::Stack containing only the message objects with the
 supplied subject. If there are no messages for that subject then the stack
