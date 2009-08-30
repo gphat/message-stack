@@ -6,7 +6,7 @@ use Carp qw(croak);
 use Check::ISA;
 use MooseX::Storage;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 with Storage('format' => 'JSON', io => 'File');
 
@@ -66,7 +66,7 @@ sub for_subject {
     return $self->search(sub { $_[0]->subject eq $subject if $_[0]->has_subject });
 }
 
-sub has_for_id {
+sub has_id {
     my ($self, $id) = @_;
 
     return 0 unless $self->has_messages;
@@ -74,7 +74,7 @@ sub has_for_id {
     return $self->for_id($id)->count ? 1 : 0;
 }
 
-sub has_for_level {
+sub has_level {
     my ($self, $level) = @_;
 
     return 0 unless $self->has_messages;
@@ -82,7 +82,7 @@ sub has_for_level {
     return $self->for_level($level)->count ? 1 : 0;
 }
 
-sub has_for_scope {
+sub has_scope {
     my ($self, $scope) = @_;
 
     return 0 unless $self->has_messages;
@@ -90,7 +90,7 @@ sub has_for_scope {
     return $self->for_scope($scope)->count ? 1 : 0;
 }
 
-sub has_for_subject {
+sub has_subject {
     my ($self, $subject) = @_;
 
     return 0 unless $self->has_messages;

@@ -1,7 +1,10 @@
 Revision history for Message-Stack
 
+0.04
+  - Rename all "has_for_" methods to "has_"
+
 0.03
-  - Remove "has_message_" prefix from all methods that had it
+  - Remove "get_message_" prefix from all methods that had it
   - Add MooseX::Storage so stack can be serialized easily
   - Add DataVerifier and FormValidator consumers
 

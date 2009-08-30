@@ -25,24 +25,24 @@ $stack->add({
 my $clownstack = $stack->search( sub { $_[0]->subject eq 'clown' } );
 cmp_ok($clownstack->count, '==', 1, 'search');
 
-ok($stack->has_for_id('messageone'), 'has_for_id');
+ok($stack->has_id('messageone'), 'has_id');
 my $ids = $stack->for_id('messageone');
 cmp_ok($ids->count, '==', 1, 'for_id: 1');
-cmp_ok($ids->has_for_id('info'), '==', 0, 'has_for_id on retval');
+cmp_ok($ids->has_id('info'), '==', 0, 'has_id on retval');
 
-ok($stack->has_for_level('info'), 'has_for_level');
+ok($stack->has_level('info'), 'has_level');
 my $errors = $stack->for_level('error');
 cmp_ok($errors->count, '==', 1, 'for_level: 1');
-cmp_ok($errors->has_for_level('info'), '==', 0, 'has_for_level on retval');
+cmp_ok($errors->has_level('info'), '==', 0, 'has_level on retval');
 
-ok($stack->has_for_scope('bar'), 'has_for_scope');
+ok($stack->has_scope('bar'), 'has_scope');
 my $bazes = $stack->for_scope('baz');
 cmp_ok($bazes->count, '==', 1, 'for_scope: 1');
-cmp_ok($bazes->has_for_scope('bar'), '==', 0, 'has_for_scope on retval');
+cmp_ok($bazes->has_scope('bar'), '==', 0, 'has_scope on retval');
 
-ok($stack->has_for_subject('ass'), 'has_for_subject');
+ok($stack->has_subject('ass'), 'has_subject');
 my $asses = $stack->for_subject('ass');
 cmp_ok($asses->count, '==', 1, 'for_subject: 1');
-cmp_ok($asses->has_for_subject('clown'), '==', 0, 'has_for_subject on retval');
+cmp_ok($asses->has_subject('clown'), '==', 0, 'has_subject on retval');
 
 done_testing;
