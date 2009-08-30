@@ -8,9 +8,11 @@ inc/Module/Install/Metadata.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
 lib/Message/Stack.pm
+lib/Message/Stack/DataVerifier.pm
+lib/Message/Stack/FormValidator.pm
 lib/Message/Stack/Message.pm
 Makefile.PL
-MANIFEST
+MANIFEST			This list of files
 META.yml
 README
 t/00-load.t

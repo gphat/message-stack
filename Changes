@@ -1,5 +1,10 @@
 Revision history for Message-Stack
 
+0.03
+  - Remove "has_message_" prefix from all methods that had it
+  - Add MooseX::Storage so stack can be serialized easily
+  - Add DataVerifier and FormValidator consumers
+
 0.02
   - Rename add_to_messages.  Now it's just add
   - Rewrite finder methods
