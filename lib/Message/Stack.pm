@@ -5,8 +5,9 @@ use MooseX::AttributeHelpers;
 use Carp qw(croak);
 use Check::ISA;
 use MooseX::Storage;
+use Message::Stack::Message
 
-our $VERSION = '0.04';
+our $VERSION = '0.06';
 
 with Storage('format' => 'JSON', io => 'File');
 
@@ -168,12 +169,12 @@ Returns the number of messages in the stack.
 
 Returns the first message (if there is one, else undef)
 
-head2 search (CODEREF)
+=head2 search (CODEREF)
 
 Returns a Message::Stack containing messages that return true when passed
 to the coderef argument.
 
-  $stack->find( sub { $_[0]->id eq 'someid' } )
+  $stack->search( sub { $_[0]->id eq 'someid' } )
 
 =head2 get_message ($index)
 

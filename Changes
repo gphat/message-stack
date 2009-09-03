@@ -1,5 +1,9 @@
 Revision history for Message-Stack
 
+0.05
+  - Use Message::Stack::Message in Message::Stack (reported by Kevin Smith)
+  - Fix POD typos related to search (reported by Kevin Smith)
+
 0.04
   - Rename all "has_for_" methods to "has_"
 
