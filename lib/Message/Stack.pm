@@ -167,7 +167,7 @@ Returns the number of messages in the stack.
 
 =head2 messages
 
-Returns the full list of messages for this stack.
+Returns the full arrayref of messages for this stack.
 
 =head2 first_message
 
