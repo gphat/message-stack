@@ -7,7 +7,7 @@ use Check::ISA;
 use MooseX::Storage;
 use Message::Stack::Message
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 with Storage('format' => 'JSON', io => 'File');
 
@@ -212,19 +212,19 @@ returned will have no messages.
 
 Returns true if there are messages in the stack, else false
 
-=head2 has_messages_for_id ($id)
+=head2 has_id ($id)
 
 Returns true if there are messages with the supplied id.
 
-=head2 has_messages_for_level ($level)
+=head2 has_level ($level)
 
 Returns true if there are messages with the supplied level.
 
-=head2 has_messages_for_scope ($scope)
+=head2 has_scope ($scope)
 
 Returns true if there are messages with the supplied scope.
 
-=head2 has_messages_for_subject ($subject)
+=head2 has_subject ($subject)
 
 Returns true if there are messages with the supplied subject.
 
