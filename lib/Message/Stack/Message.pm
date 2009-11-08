@@ -17,6 +17,12 @@ has level => (
     predicate => 'has_level'
 );
 
+has params => (
+    is => 'rw',
+    isa => 'ArrayRef',
+    predicate => 'has_params'
+);
+
 has scope => (
     is => 'rw',
     isa => 'Maybe[Str]',
@@ -76,6 +82,12 @@ text for a message.
 
 String attribute used to describe the level of this message.  Intended for use
 with strings like 'error' or 'info'.
+
+=head2 params
+
+An optional ArrayRef of params.  This is provided for localization of messages,
+where id may correspond to a Gettext style string and the params may
+represent some placeholder values.
 
 =head2 scope
 

@@ -1,5 +1,8 @@
 Revision history for Message-Stack
 
+0.09
+  - Add params to Message class.
+
 0.08
   - More POD fixes
 
