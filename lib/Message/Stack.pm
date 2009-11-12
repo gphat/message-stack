@@ -7,7 +7,7 @@ use Check::ISA;
 use MooseX::Storage;
 use Message::Stack::Message
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 with Storage('format' => 'JSON', io => 'File');
 

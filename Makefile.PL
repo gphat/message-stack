@@ -11,6 +11,7 @@ requires 'Check::ISA' => '0.04';
 requires 'Moose' => '0.87';
 requires 'MooseX::AttributeHelpers' => '0.20';
 requires 'MooseX::Storage' => '0.21';
+requires 'JSON::Any' => '1.22';
 
 WriteAll;
 

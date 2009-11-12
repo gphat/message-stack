@@ -1,5 +1,8 @@
 Revision history for Message-Stack
 
+0.10
+  - Add JSON::Any dep
+
 0.09
   - Add params to Message class.
 
