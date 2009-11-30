@@ -1,5 +1,8 @@
 Revision history for Message-Stack
 
+0.11
+  - Use MooseX::Storage::Deferred
+
 0.10
   - Add JSON::Any dep
 

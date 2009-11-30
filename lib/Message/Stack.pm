@@ -7,9 +7,9 @@ use Check::ISA;
 use MooseX::Storage;
 use Message::Stack::Message
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
-with Storage('format' => 'JSON', io => 'File');
+with 'MooseX::Storage::Deferred';
 
 has messages => (
     metaclass => 'Collection::Array',
@@ -153,6 +153,16 @@ L<Message::Stack::Message> for an explanation of these attributes.
 This is not a logging mechanism.  The original use was to store various errors
 or messages that occur during processing for later display in a web
 application.  The messages are added via C<add>.
+
+=head1 SERIALIZATION
+
+This module uses L<MooseX::Storage::Deferred> to facilitate easy serialization.
+Consult the documentation for L<MooseX::Storage::Deferred> options, but the
+gist is:
+
+  my $json = $stack->freeze({ format => 'JSON' });
+  ...
+  my $stack = Message::Stack->thaw($json, { format => 'JSON' });
 
 =head1 METHODS
 
