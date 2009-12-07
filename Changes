@@ -1,5 +1,8 @@
 Revision history for Message-Stack
 
+0.12
+  - Modify DataVerifier and FormValidator parsers to set level to error
+
 0.11
   - Use MooseX::Storage::Deferred
 

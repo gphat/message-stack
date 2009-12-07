@@ -10,7 +10,8 @@ sub parse {
         $stack->add(Message::Stack::Message->new(
             id      => "missing_$f",
             scope   => $scope,
-            subject => $f
+            subject => $f,
+            level   => 'error'
         ));
     }
 
@@ -18,7 +19,8 @@ sub parse {
         $stack->add(Message::Stack::Message->new(
             id      => "invalid_$f",
             scope   => $scope,
-            subject => $f
+            subject => $f,
+            level   => 'error'
         ));
     }
 }

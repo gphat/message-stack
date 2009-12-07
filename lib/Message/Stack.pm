@@ -7,7 +7,7 @@ use Check::ISA;
 use MooseX::Storage;
 use Message::Stack::Message
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 with 'MooseX::Storage::Deferred';
 
