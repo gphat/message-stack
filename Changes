@@ -1,5 +1,9 @@
 Revision history for Message-Stack
 
+0.13
+  - Have Data::Verifier pass the original value of invalid fields as an arrayref
+    to params
+
 0.12
   - Modify DataVerifier and FormValidator parsers to set level to error
 

@@ -20,7 +20,8 @@ sub parse {
             id      => "invalid_$f",
             scope   => $scope,
             subject => $f,
-            level   => 'error'
+            level   => 'error',
+            params  => [ $results->get_original_value($f) ]
         ));
     }
 }
