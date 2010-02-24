@@ -1,5 +1,13 @@
 Revision history for Message-Stack
 
+0.14    February 24, 2010
+  - Remove dependency on MooseX::AttributeHelpers in favor of native
+    traits. (arcanez)
+  - Remove dependency on Check::ISA in favor of is_$type methods created by
+    MooseX::Types. (arcanez)
+  - Add first and last methods so I don't have to type so much. (gphat)
+  - Remove _find method, no idea why it was there. (gphat)
+
 0.13
   - Have Data::Verifier pass the original value of invalid fields as an arrayref
     to params

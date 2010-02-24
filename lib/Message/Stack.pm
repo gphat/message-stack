@@ -7,7 +7,7 @@ use MooseX::Types::Moose qw(HashRef);
 use Message::Stack::Message;
 use Message::Stack::Types qw(MessageStackMessage);
 
-our $VERSION = '0.13';
+our $VERSION = '0.14';
 
 with 'MooseX::Storage::Deferred';
 
@@ -17,14 +17,15 @@ has messages => (
     isa => 'ArrayRef[Message::Stack::Message]',
     default => sub { [] },
     handles => {
-        reset          => 'clear',
-        count          => 'count',
-        has_messages   => 'count',
-        _find_message  => 'first',
-        first_message  => [ get => 0 ],
-        _grep_messages => 'grep',
-        get_message    => 'get',
-        last_message   => [ get => -1 ],
+        reset           => 'clear',
+        count           => 'count',
+        has_messages    => 'count',
+        first           => [ get => 0 ],
+        first_message   => [ get => 0 ],
+        _grep_messages  => 'grep',
+        get_message     => 'get',
+        last            => [ get => -1 ],
+        last_message    => [ get => -1 ],
     }
 );
 

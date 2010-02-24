@@ -11,6 +11,7 @@ lib/Message/Stack.pm
 lib/Message/Stack/DataVerifier.pm
 lib/Message/Stack/FormValidator.pm
 lib/Message/Stack/Message.pm
+lib/Message/Stack/Types.pm
 Makefile.PL
 MANIFEST			This list of files
 META.yml
