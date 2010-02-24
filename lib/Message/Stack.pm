@@ -1,30 +1,30 @@
 package Message::Stack;
 use Moose;
-use MooseX::AttributeHelpers;
 
 use Carp qw(croak);
-use Check::ISA;
 use MooseX::Storage;
-use Message::Stack::Message
+use MooseX::Types::Moose qw(HashRef);
+use Message::Stack::Message;
+use Message::Stack::Types qw(MessageStackMessage);
 
 our $VERSION = '0.13';
 
 with 'MooseX::Storage::Deferred';
 
 has messages => (
-    metaclass => 'Collection::Array',
+    traits => [ 'Array' ],
     is => 'rw',
     isa => 'ArrayRef[Message::Stack::Message]',
     default => sub { [] },
-    provides => {
-        clear => 'reset',
-        count => 'count',
-        empty => 'has_messages',
-        find => '_find_message',
-        first => 'first_message',
-        grep => '_grep_messages',
-        get => 'get_message',
-        last => 'last_message',
+    handles => {
+        reset          => 'clear',
+        count          => 'count',
+        has_messages   => 'count',
+        _find_message  => 'first',
+        first_message  => [ get => 0 ],
+        _grep_messages => 'grep',
+        get_message    => 'get',
+        last_message   => [ get => -1 ],
     }
 );
 
@@ -33,9 +33,9 @@ sub add {
 
     return unless defined($message);
 
-    if(obj($message, 'Message::Stack::Message')) {
+    if(is_MessageStackMessage($message)) {
         push(@{ $self->messages }, $message);
-    } elsif(ref($message) eq 'HASH') {
+    } elsif(is_HashRef($message)) {
         my $mess = Message::Stack::Message->new($message);
         push(@{ $self->messages }, $mess);
     } else {
