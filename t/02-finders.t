@@ -22,7 +22,7 @@ $stack->add({
     subject => 'clown'
 });
 
-my $clownstack = $stack->search( sub { $_[0]->subject eq 'clown' } );
+my $clownstack = $stack->search( sub { $_->subject eq 'clown' } );
 cmp_ok($clownstack->count, '==', 1, 'search');
 
 ok($stack->has_id('messageone'), 'has_id');

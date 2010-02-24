@@ -46,25 +46,25 @@ sub add {
 sub for_id {
     my ($self, $id) = @_;
 
-    return $self->search(sub { $_[0]->id eq $id if $_[0]->has_id });
+    return $self->search(sub { $_->id eq $id if $_->has_id });
 }
 
 sub for_level {
     my ($self, $level) = @_;
 
-    return $self->search(sub { $_[0]->level eq $level if $_[0]->has_level });
+    return $self->search(sub { $_->level eq $level if $_->has_level });
 }
 
 sub for_scope {
     my ($self, $scope) = @_;
 
-    return $self->search(sub { $_[0]->scope eq $scope if $_[0]->has_scope });
+    return $self->search(sub { $_->scope eq $scope if $_->has_scope });
 }
 
 sub for_subject {
     my ($self, $subject) = @_;
 
-    return $self->search(sub { $_[0]->subject eq $subject if $_[0]->has_subject });
+    return $self->search(sub { $_->subject eq $subject if $_->has_subject });
 }
 
 sub has_id {
