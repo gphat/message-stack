@@ -68,7 +68,7 @@ Message::Stack::Message - A Message
 =head1 DESCRIPTION
 
 The Message object formalizes the messages that are added to the stack.  None
-of the fields are required, as it's up to the developer to deside what to use.
+of the fields are required, as it's up to the developer to decide what to use.
 
 =head1 ATTRIBUTES
 

@@ -1,5 +1,8 @@
 Revision history for Message-Stack
 
+0.15    March 8, 2010
+  - Fix typo in Message::Stack::Message (uwe)
+
 0.14    February 24, 2010
   - Remove dependency on MooseX::AttributeHelpers in favor of native
     traits. (arcanez)
