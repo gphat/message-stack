@@ -1,5 +1,8 @@
 Revision history for Message-Stack
 
+0.17    Jul 14, 2010
+  - Remove "parser" classes in favor of using Message::Stack::Parser::*
+
 0.16    March 8, 2010
   - Fix typo in Message::Stack::Message POD (uwe)
 

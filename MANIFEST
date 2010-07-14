@@ -8,8 +8,6 @@ inc/Module/Install/Metadata.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
 lib/Message/Stack.pm
-lib/Message/Stack/DataVerifier.pm
-lib/Message/Stack/FormValidator.pm
 lib/Message/Stack/Message.pm
 lib/Message/Stack/Types.pm
 Makefile.PL
