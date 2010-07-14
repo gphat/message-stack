@@ -7,7 +7,7 @@ use MooseX::Types::Moose qw(HashRef);
 use Message::Stack::Message;
 use Message::Stack::Types qw(MessageStackMessage);
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 with 'MooseX::Storage::Deferred';
 
