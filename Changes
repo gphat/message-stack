@@ -1,5 +1,8 @@
 Revision history for Message-Stack
 
+0.16    March 8, 2010
+  - Fix typo in Message::Stack::Message POD (uwe)
+
 0.15    March 8, 2010
   - Fix typo in Message::Stack::Message (uwe)
 

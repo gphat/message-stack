@@ -75,7 +75,7 @@ of the fields are required, as it's up to the developer to decide what to use.
 =head2 id
 
 String identifier for this message.  Intended for use with gettext or similar
-I18N mechanisms wherein a message id is used to idenfity the translated
+I18N mechanisms wherein a message id is used to identity the translated
 text for a message.
 
 =head2 level
@@ -91,7 +91,7 @@ represent some placeholder values.
 
 =head2 scope
 
-String idenfitying the scope of a message.  Used for cases when multiple
+String identitying the scope of a message.  Used for cases when multiple
 subsystems might be emitting messages and a mechanism for grouping them is
 necessary.  A common case would be a form with multiple fieldsets.
 
