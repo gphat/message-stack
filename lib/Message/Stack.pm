@@ -7,7 +7,7 @@ use MooseX::Types::Moose qw(HashRef);
 use Message::Stack::Message;
 use Message::Stack::Types qw(MessageStackMessage);
 
-our $VERSION = '0.17';
+our $VERSION = '0.18';
 
 with 'MooseX::Storage::Deferred';
 
@@ -242,6 +242,10 @@ Returns true if there are messages with the supplied subject.
 =head2 last_message
 
 Returns the last message (if there is one, else undef)
+
+=head2 reset
+
+Clear all messages, resetting this stack.
 
 =head1 AUTHOR
 

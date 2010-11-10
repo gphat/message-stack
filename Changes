@@ -1,5 +1,8 @@
 Revision history for Message-Stack
 
+0.18    Nov 10, 2010
+  - Document reset method
+
 0.17    Jul 14, 2010
   - Remove "parser" classes in favor of using Message::Stack::Parser::*
 
