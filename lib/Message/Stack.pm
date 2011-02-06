@@ -7,7 +7,7 @@ use MooseX::Types::Moose qw(HashRef);
 use Message::Stack::Message;
 use Message::Stack::Types qw(MessageStackMessage);
 
-our $VERSION = '0.18';
+our $VERSION = '0.19';
 
 with 'MooseX::Storage::Deferred';
 
@@ -45,9 +45,14 @@ sub add {
 }
 
 sub for_id {
-    my ($self, $id) = @_;
+    my $self = shift;
+    $self->for_msgid(@_);
+}
 
-    return $self->search(sub { $_->id eq $id if $_->has_id });
+sub for_msgid {
+    my ($self, $msgid) = @_;
+
+    return $self->search(sub { $_->msgid eq $msgid if $_->has_msgid });
 }
 
 sub for_level {
@@ -69,11 +74,16 @@ sub for_subject {
 }
 
 sub has_id {
-    my ($self, $id) = @_;
+    my $self = shift;
+    $self->has_msgid(@_);
+}
+
+sub has_msgid {
+    my ($self, $msgid) = @_;
 
     return 0 unless $self->has_messages;
 
-    return $self->for_id($id)->count ? 1 : 0;
+    return $self->for_msgid($msgid)->count ? 1 : 0;
 }
 
 sub has_level {
@@ -122,7 +132,7 @@ Message::Stack - Deal with a "stack" of messages
   my $stack = Message::Stack->new;
 
   $stack->add(Message::Stack::Message->new(
-      id        => 'something_happened',
+      msgid     => 'something_happened',
       level     => 'error',
       scope     => 'login_form',
       subject   => 'username',
@@ -130,7 +140,7 @@ Message::Stack - Deal with a "stack" of messages
   ));
   # Or... for those that want to type less
   $stack->add({
-      id        => 'something_else_happened',
+      msgid     => 'something_else_happened',
       level     => 'error',
       scope     => 'login_form',
       subject   => 'password',
@@ -141,7 +151,7 @@ Message::Stack - Deal with a "stack" of messages
   my $errors = $stack->for_level($error);
   # Or
   my $login_form_errors = $stack->for_scope('login_form');
-  $login_form_errors->for_id('username');
+  $login_form_errors->for_subject('username');
   print "Username has ".$login_form_errors->count." errors.\n";
 
 =head1 DESCRIPTION
@@ -154,6 +164,13 @@ L<Message::Stack::Message> for an explanation of these attributes.
 This is not a logging mechanism.  The original use was to store various errors
 or messages that occur during processing for later display in a web
 application.  The messages are added via C<add>.
+
+=head2 Note About msgid
+
+msgid used to be id.  It was renamed to be a bit more description.  All the
+methods that existed for id still exist and the id attribute is now aliased
+to msgid. In other words if you create an object using C<id> then the msgid
+methods B<and> the C<id> methods will work, and vice versa.
 
 =head1 SERIALIZATION
 
@@ -195,10 +212,10 @@ to the coderef argument.
 
 Get the message at the supplied index.
 
-=head2 for_id ($id)
+=head2 for_msgid ($msgid)
 
 Returns a new Message::Stack containing only the message objects with the
-supplied id. If there are no messages for that level then the stack
+supplied msgid. If there are no messages for that level then the stack
 returned will have no messages.
 
 =head2 for_level ($level)
@@ -223,9 +240,9 @@ returned will have no messages.
 
 Returns true if there are messages in the stack, else false
 
-=head2 has_id ($id)
+=head2 has_msgid ($msgid)
 
-Returns true if there are messages with the supplied id.
+Returns true if there are messages with the supplied msgid.
 
 =head2 has_level ($level)
 

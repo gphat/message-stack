@@ -8,6 +8,7 @@ license  'perl';
 build_requires 'Test::More' => '0.92';
 
 requires 'Moose' => '0.90';
+requires 'MooseX::Aliases';
 requires 'MooseX::Types' => '0.21';
 requires 'MooseX::Storage' => '0.21';
 

@@ -1,5 +1,8 @@
 Revision history for Message-Stack
 
+0.19    Feb 6, 2010
+  - Rename id to msgid, but use MooseX::Aliases and such to provide backcompat
+
 0.18    Nov 10, 2010
   - Document reset method
 

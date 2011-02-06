@@ -1,14 +1,16 @@
 package Message::Stack::Message;
 use Moose;
 
+use MooseX::Aliases;
 use MooseX::Storage;
 
 with 'MooseX::Storage::Deferred';
 
-has id => (
+has msgid => (
     is => 'rw',
     isa => 'Maybe[Str]',
-    predicate => 'has_id'
+    predicate => 'has_msgid',
+    alias => 'id'
 );
 
 has level => (
@@ -41,6 +43,12 @@ has text => (
     predicate => 'has_text'
 );
 
+sub has_id {
+    my ($self) = @_;
+
+    return $self->has_msgid;
+}
+
 __PACKAGE__->meta->make_immutable;
 no Moose;
 1;
@@ -57,7 +65,7 @@ Message::Stack::Message - A Message
 
   $stack->add(
     Message::Stack::Message->new(
-        id => 'I18NName',
+        msgid => 'I18NName',
         level => 'error',
         scope => 'loginform'
         subject => 'username',
@@ -70,9 +78,16 @@ Message::Stack::Message - A Message
 The Message object formalizes the messages that are added to the stack.  None
 of the fields are required, as it's up to the developer to decide what to use.
 
+=head2 Note About msgid
+
+msgid used to be id.  It was renamed to be a bit more description.  All the
+methods that existed for id still exist and the id attribute is now aliased
+to msgid. In other words if you create an object using C<id> then the msgid
+methods B<and> the C<id> methods will work, and vice versa.
+
 =head1 ATTRIBUTES
 
-=head2 id
+=head2 msgid
 
 String identifier for this message.  Intended for use with gettext or similar
 I18N mechanisms wherein a message id is used to identity the translated
