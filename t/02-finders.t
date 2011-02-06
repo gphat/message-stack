@@ -33,9 +33,9 @@ cmp_ok($ids->has_id('info'), '==', 0, 'has_id on retval');
 
 # Verify that the old has_id and for_id work
 ok($stack->has_msgid('messageone'), 'has_msgid');
-my $ids = $stack->for_msgid('messageone');
-cmp_ok($ids->count, '==', 1, 'for_msgid: 1');
-cmp_ok($ids->has_msgid('info'), '==', 0, 'has_msgid on retval');
+my $mids = $stack->for_msgid('messageone');
+cmp_ok($mids->count, '==', 1, 'for_msgid: 1');
+cmp_ok($mids->has_msgid('info'), '==', 0, 'has_msgid on retval');
 
 ok($stack->has_level('info'), 'has_level');
 my $errors = $stack->for_level('error');
