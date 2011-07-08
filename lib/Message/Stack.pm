@@ -7,7 +7,7 @@ use MooseX::Types::Moose qw(HashRef);
 use Message::Stack::Message;
 use Message::Stack::Types qw(MessageStackMessage);
 
-our $VERSION = '0.19';
+our $VERSION = '0.20';
 
 with 'MooseX::Storage::Deferred';
 
@@ -115,6 +115,20 @@ sub search {
 
     my @messages = $self->_grep_messages($coderef);
     return Message::Stack->new(messages => \@messages);
+}
+
+sub reset_for_scope {
+    my ($self, $scope) = @_;
+
+    return 0 unless $self->has_messages;
+
+    my $filtered;
+    foreach my $message (@{$self->messages}) {
+        next if($message->scope eq $scope);
+        push @{$filtered}, $message;
+    }
+
+    $self->messages($filtered);
 }
 
 __PACKAGE__->meta->make_immutable;
