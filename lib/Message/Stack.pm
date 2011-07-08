@@ -274,6 +274,10 @@ Returns true if there are messages with the supplied subject.
 
 Returns the last message (if there is one, else undef)
 
+=head2 reset_for_scope($scope)
+
+Clears the stack of all messages of scope $scope.
+
 =head2 reset
 
 Clear all messages, resetting this stack.
