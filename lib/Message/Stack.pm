@@ -131,6 +131,48 @@ sub reset_for_scope {
     $self->messages($filtered);
 }
 
+sub reset_for_subject {
+    my ($self, $subject) = @_;
+
+    return 0 unless $self->has_messages;
+
+    my $filtered;
+    foreach my $message (@{$self->messages}) {
+        next if($message->subject eq $subject);
+        push @{$filtered}, $message;
+    }
+
+    $self->messages($filtered);
+}
+
+sub reset_for_level {
+    my ($self, $level) = @_;
+
+    return 0 unless $self->has_messages;
+
+    my $filtered;
+    foreach my $message (@{$self->messages}) {
+        next if($message->level eq $level);
+        push @{$filtered}, $message;
+    }
+
+    $self->messages($filtered);
+}
+
+sub reset_for_msgid {
+    my ($self, $msgid) = @_;
+
+    return 0 unless $self->has_messages;
+
+    my $filtered;
+    foreach my $message (@{$self->messages}) {
+        next if($message->msgid eq $msgid);
+        push @{$filtered}, $message;
+    }
+
+    $self->messages($filtered);
+}
+
 __PACKAGE__->meta->make_immutable;
 no Moose;
 1;
@@ -277,6 +319,18 @@ Returns the last message (if there is one, else undef)
 =head2 reset_for_scope($scope)
 
 Clears the stack of all messages of scope $scope.
+
+=head2 reset_for_subject($subject)
+
+Clears the stack of all messages of subject $subject.
+
+=head2 reset_for_level($level)
+
+Clears the stack of all messages of level $level.
+
+=head2 reset_for_msgid($msgid)
+
+Clears the stack of all messages of msgid $msgid.
 
 =head2 reset
 
