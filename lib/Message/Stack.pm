@@ -7,7 +7,7 @@ use MooseX::Types::Moose qw(HashRef);
 use Message::Stack::Message;
 use Message::Stack::Types qw(MessageStackMessage);
 
-our $VERSION = '0.19';
+our $VERSION = '0.20';
 
 with 'MooseX::Storage::Deferred';
 
@@ -115,6 +115,62 @@ sub search {
 
     my @messages = $self->_grep_messages($coderef);
     return Message::Stack->new(messages => \@messages);
+}
+
+sub reset_for_scope {
+    my ($self, $scope) = @_;
+
+    return 0 unless $self->has_messages;
+
+    my $filtered;
+    foreach my $message (@{$self->messages}) {
+        next if($message->scope eq $scope);
+        push @{$filtered}, $message;
+    }
+
+    $self->messages($filtered);
+}
+
+sub reset_for_subject {
+    my ($self, $subject) = @_;
+
+    return 0 unless $self->has_messages;
+
+    my $filtered;
+    foreach my $message (@{$self->messages}) {
+        next if($message->subject eq $subject);
+        push @{$filtered}, $message;
+    }
+
+    $self->messages($filtered);
+}
+
+sub reset_for_level {
+    my ($self, $level) = @_;
+
+    return 0 unless $self->has_messages;
+
+    my $filtered;
+    foreach my $message (@{$self->messages}) {
+        next if($message->level eq $level);
+        push @{$filtered}, $message;
+    }
+
+    $self->messages($filtered);
+}
+
+sub reset_for_msgid {
+    my ($self, $msgid) = @_;
+
+    return 0 unless $self->has_messages;
+
+    my $filtered;
+    foreach my $message (@{$self->messages}) {
+        next if($message->msgid eq $msgid);
+        push @{$filtered}, $message;
+    }
+
+    $self->messages($filtered);
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -259,6 +315,22 @@ Returns true if there are messages with the supplied subject.
 =head2 last_message
 
 Returns the last message (if there is one, else undef)
+
+=head2 reset_for_scope($scope)
+
+Clears the stack of all messages of scope $scope.
+
+=head2 reset_for_subject($subject)
+
+Clears the stack of all messages of subject $subject.
+
+=head2 reset_for_level($level)
+
+Clears the stack of all messages of level $level.
+
+=head2 reset_for_msgid($msgid)
+
+Clears the stack of all messages of msgid $msgid.
 
 =head2 reset
 
