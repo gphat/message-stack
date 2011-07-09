@@ -8,31 +8,30 @@ version 0.20
 
 # SYNOPSIS
 
-  my $stack = Message::Stack->new;
+    my $stack = Message::Stack->new;
 
-  $stack->add(Message::Stack::Message->new(
+    $stack->add(Message::Stack::Message->new(
       msgid     => 'something_happened',
       level     => 'error',
       scope     => 'login_formm',
       subject   => 'username',
       text      => 'Something happened!'
-  ));
-  # Or... for those that want to type less
-  $stack->add({
+    ));
+    # Or... for those that want to type less
+    $stack->add({
       msgid     => 'something_else_happened',
       level     => 'error',
       scope     => 'login_form',
       subject   => 'password',
       text      => 'Something else happened!'
-  });
-  
+    });
 
-  ...
-  my $errors = $stack->for_level($error);
-  # Or
-  my $login_form_errors = $stack->for_scope('login_form');
-  $login_form_errors->for_subject('username');
-  print "Username has ".$login_form_errors->count." errors.\n";
+    ...
+    my $errors = $stack->for_level($error);
+    # Or
+    my $login_form_errors = $stack->for_scope('login_form');
+    $login_form_errors->for_subject('username');
+    print "Username has ".$login_form_errors->count." errors.\n";
 
 # DESCRIPTION
 
