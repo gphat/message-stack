@@ -1,7 +1,7 @@
 package Message::Stack;
 use Moose;
 
-# ABSTRACT: 
+# ABSTRACT: Deal with a "stack" of messages
 
 use Carp qw(croak);
 use MooseX::Storage;

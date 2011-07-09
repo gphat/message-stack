@@ -1,6 +1,6 @@
 # NAME
 
-Message::Stack - use Carp qw(croak);
+Message::Stack - Deal with a "stack" of messages
 
 # VERSION
 
