@@ -1,6 +1,9 @@
 Revision history for Message-Stack
 
 {{$NEXT}}
+  - Use GPHAT dzil bundle
+
+0.21 Jul 8 2011
   - Add reset_* methods (holophrastic)
   - Convert to Dist::Zilla and Pod::Weaver
 
