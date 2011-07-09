@@ -1,5 +1,9 @@
 Revision history for Message-Stack
 
+{{$NEXT}}
+  - Add reset_* methods (holophrastic)
+  - Convert to Dist::Zilla and Pod::Weaver
+
 0.19    Feb 6, 2010
   - Rename id to msgid, but use MooseX::Aliases and such to provide backcompat
 

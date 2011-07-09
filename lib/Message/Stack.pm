@@ -1,187 +1,15 @@
 package Message::Stack;
 use Moose;
 
+# ABSTRACT: 
+
 use Carp qw(croak);
 use MooseX::Storage;
 use MooseX::Types::Moose qw(HashRef);
 use Message::Stack::Message;
 use Message::Stack::Types qw(MessageStackMessage);
 
-our $VERSION = '0.20';
-
 with 'MooseX::Storage::Deferred';
-
-has messages => (
-    traits => [ 'Array' ],
-    is => 'rw',
-    isa => 'ArrayRef[Message::Stack::Message]',
-    default => sub { [] },
-    handles => {
-        reset           => 'clear',
-        count           => 'count',
-        has_messages    => 'count',
-        first           => [ get => 0 ],
-        first_message   => [ get => 0 ],
-        _grep_messages  => 'grep',
-        get_message     => 'get',
-        last            => [ get => -1 ],
-        last_message    => [ get => -1 ],
-    }
-);
-
-sub add {
-    my ($self, $message) = @_;
-
-    return unless defined($message);
-
-    if(is_MessageStackMessage($message)) {
-        push(@{ $self->messages }, $message);
-    } elsif(is_HashRef($message)) {
-        my $mess = Message::Stack::Message->new($message);
-        push(@{ $self->messages }, $mess);
-    } else {
-        croak('Message must be either a Message::Stack::Message or hashref');
-    }
-}
-
-sub for_id {
-    my $self = shift;
-    $self->for_msgid(@_);
-}
-
-sub for_msgid {
-    my ($self, $msgid) = @_;
-
-    return $self->search(sub { $_->msgid eq $msgid if $_->has_msgid });
-}
-
-sub for_level {
-    my ($self, $level) = @_;
-
-    return $self->search(sub { $_->level eq $level if $_->has_level });
-}
-
-sub for_scope {
-    my ($self, $scope) = @_;
-
-    return $self->search(sub { $_->scope eq $scope if $_->has_scope });
-}
-
-sub for_subject {
-    my ($self, $subject) = @_;
-
-    return $self->search(sub { $_->subject eq $subject if $_->has_subject });
-}
-
-sub has_id {
-    my $self = shift;
-    $self->has_msgid(@_);
-}
-
-sub has_msgid {
-    my ($self, $msgid) = @_;
-
-    return 0 unless $self->has_messages;
-
-    return $self->for_msgid($msgid)->count ? 1 : 0;
-}
-
-sub has_level {
-    my ($self, $level) = @_;
-
-    return 0 unless $self->has_messages;
-
-    return $self->for_level($level)->count ? 1 : 0;
-}
-
-sub has_scope {
-    my ($self, $scope) = @_;
-
-    return 0 unless $self->has_messages;
-
-    return $self->for_scope($scope)->count ? 1 : 0;
-}
-
-sub has_subject {
-    my ($self, $subject) = @_;
-
-    return 0 unless $self->has_messages;
-
-    return $self->for_subject($subject)->count ? 1 : 0;
-}
-
-sub search {
-    my ($self, $coderef) = @_;
-
-    my @messages = $self->_grep_messages($coderef);
-    return Message::Stack->new(messages => \@messages);
-}
-
-sub reset_for_scope {
-    my ($self, $scope) = @_;
-
-    return 0 unless $self->has_messages;
-
-    my $filtered;
-    foreach my $message (@{$self->messages}) {
-        next if($message->scope eq $scope);
-        push @{$filtered}, $message;
-    }
-
-    $self->messages($filtered);
-}
-
-sub reset_for_subject {
-    my ($self, $subject) = @_;
-
-    return 0 unless $self->has_messages;
-
-    my $filtered;
-    foreach my $message (@{$self->messages}) {
-        next if($message->subject eq $subject);
-        push @{$filtered}, $message;
-    }
-
-    $self->messages($filtered);
-}
-
-sub reset_for_level {
-    my ($self, $level) = @_;
-
-    return 0 unless $self->has_messages;
-
-    my $filtered;
-    foreach my $message (@{$self->messages}) {
-        next if($message->level eq $level);
-        push @{$filtered}, $message;
-    }
-
-    $self->messages($filtered);
-}
-
-sub reset_for_msgid {
-    my ($self, $msgid) = @_;
-
-    return 0 unless $self->has_messages;
-
-    my $filtered;
-    foreach my $message (@{$self->messages}) {
-        next if($message->msgid eq $msgid);
-        push @{$filtered}, $message;
-    }
-
-    $self->messages($filtered);
-}
-
-__PACKAGE__->meta->make_immutable;
-no Moose;
-1;
-
-__END__
-
-=head1 NAME
-
-Message::Stack - Deal with a "stack" of messages
 
 =head1 SYNOPSIS
 
@@ -190,7 +18,7 @@ Message::Stack - Deal with a "stack" of messages
   $stack->add(Message::Stack::Message->new(
       msgid     => 'something_happened',
       level     => 'error',
-      scope     => 'login_form',
+      scope     => 'login_formm',
       subject   => 'username',
       text      => 'Something happened!'
   ));
@@ -221,6 +49,10 @@ This is not a logging mechanism.  The original use was to store various errors
 or messages that occur during processing for later display in a web
 application.  The messages are added via C<add>.
 
+=begin :prelude
+
+=head1 NOTES
+
 =head2 Note About msgid
 
 msgid used to be id.  It was renamed to be a bit more description.  All the
@@ -238,107 +70,297 @@ gist is:
   ...
   my $stack = Message::Stack->thaw($json, { format => 'JSON' });
 
-=head1 METHODS
+=end :prelude
 
-=head2 add ($message)
+=attr messages
+
+Returns the full arrayref of messages for this stack.
+
+=method count
+
+Returns the number of messages in the stack.
+
+=method first_message
+
+Returns the first message (if there is one, else undef)
+
+=method get_message ($index)
+
+Get the message at the supplied index.
+
+=method has_messages
+
+Returns true if there are messages in the stack, else false
+
+=method last_message
+
+Returns the last message (if there is one, else undef)
+
+=method reset
+
+Clear all messages, resetting this stack.
+
+=cut
+
+has messages => (
+    traits => [ 'Array' ],
+    is => 'rw',
+    isa => 'ArrayRef[Message::Stack::Message]',
+    default => sub { [] },
+    handles => {
+        reset           => 'clear',
+        count           => 'count',
+        has_messages    => 'count',
+        first           => [ get => 0 ],
+        first_message   => [ get => 0 ],
+        _grep_messages  => 'grep',
+        get_message     => 'get',
+        last            => [ get => -1 ],
+        last_message    => [ get => -1 ],
+    }
+);
+
+=method add ($message)
 
 Adds the supplied message to the stack.  C<$message> may be either a
 L<Message::Stack::Message> object or a hashref with similar keys.
 
-=head2 count
+=cut
 
-Returns the number of messages in the stack.
+sub add {
+    my ($self, $message) = @_;
 
-=head2 messages
+    return unless defined($message);
 
-Returns the full arrayref of messages for this stack.
+    if(is_MessageStackMessage($message)) {
+        push(@{ $self->messages }, $message);
+    } elsif(is_HashRef($message)) {
+        my $mess = Message::Stack::Message->new($message);
+        push(@{ $self->messages }, $mess);
+    } else {
+        croak('Message must be either a Message::Stack::Message or hashref');
+    }
+}
 
-=head2 first_message
+sub for_id {
+    my $self = shift;
+    $self->for_msgid(@_);
+}
 
-Returns the first message (if there is one, else undef)
-
-=head2 search (CODEREF)
-
-Returns a Message::Stack containing messages that return true when passed
-to the coderef argument.
-
-  $stack->search( sub { $_[0]->id eq 'someid' } )
-
-=head2 get_message ($index)
-
-Get the message at the supplied index.
-
-=head2 for_msgid ($msgid)
+=method for_msgid ($msgid)
 
 Returns a new Message::Stack containing only the message objects with the
 supplied msgid. If there are no messages for that level then the stack
 returned will have no messages.
 
-=head2 for_level ($level)
+=cut
+
+sub for_msgid {
+    my ($self, $msgid) = @_;
+
+    return $self->search(sub { $_->msgid eq $msgid if $_->has_msgid });
+}
+
+=method for_level ($level)
 
 Returns a new Message::Stack containing only the message objects with the
 supplied level. If there are no messages for that level then the stack
 returned will have no messages.
 
-=head2 for_scope ($scope)
+=cut
+
+sub for_level {
+    my ($self, $level) = @_;
+
+    return $self->search(sub { $_->level eq $level if $_->has_level });
+}
+
+=method for_scope ($scope)
 
 Returns a new Message::Stack containing only the message objects with the
 supplied scope. If there are no messages for that scope then the stack
 returned will have no messages.
 
-=head2 for_subject ($subject)
+=cut
+
+sub for_scope {
+    my ($self, $scope) = @_;
+
+    return $self->search(sub { $_->scope eq $scope if $_->has_scope });
+}
+
+=method for_subject ($subject)
 
 Returns a new Message::Stack containing only the message objects with the
 supplied subject. If there are no messages for that subject then the stack
 returned will have no messages.
 
-=head2 has_messages
+=cut
 
-Returns true if there are messages in the stack, else false
+sub for_subject {
+    my ($self, $subject) = @_;
 
-=head2 has_msgid ($msgid)
+    return $self->search(sub { $_->subject eq $subject if $_->has_subject });
+}
+
+sub has_id {
+    my $self = shift;
+    $self->has_msgid(@_);
+}
+
+=method has_msgid ($msgid)
 
 Returns true if there are messages with the supplied msgid.
 
-=head2 has_level ($level)
+=cut
+
+sub has_msgid {
+    my ($self, $msgid) = @_;
+
+    return 0 unless $self->has_messages;
+
+    return $self->for_msgid($msgid)->count ? 1 : 0;
+}
+
+=method has_level ($level)
 
 Returns true if there are messages with the supplied level.
 
-=head2 has_scope ($scope)
+=cut
+
+sub has_level {
+    my ($self, $level) = @_;
+
+    return 0 unless $self->has_messages;
+
+    return $self->for_level($level)->count ? 1 : 0;
+}
+
+=method has_scope ($scope)
 
 Returns true if there are messages with the supplied scope.
 
-=head2 has_subject ($subject)
+=cut
+
+sub has_scope {
+    my ($self, $scope) = @_;
+
+    return 0 unless $self->has_messages;
+
+    return $self->for_scope($scope)->count ? 1 : 0;
+}
+
+=method has_subject ($subject)
 
 Returns true if there are messages with the supplied subject.
 
-=head2 last_message
+=cut
 
-Returns the last message (if there is one, else undef)
+sub has_subject {
+    my ($self, $subject) = @_;
 
-=head2 reset_for_scope($scope)
+    return 0 unless $self->has_messages;
+
+    return $self->for_subject($subject)->count ? 1 : 0;
+}
+
+=method search (CODEREF)
+
+Returns a Message::Stack containing messages that return true when passed
+to the coderef argument.
+
+  $stack->search( sub { $_[0]->id eq 'someid' } )
+  
+=cut
+
+sub search {
+    my ($self, $coderef) = @_;
+
+    my @messages = $self->_grep_messages($coderef);
+    return Message::Stack->new(messages => \@messages);
+}
+
+=method reset_scope($scope)
 
 Clears the stack of all messages of scope $scope.
 
-=head2 reset_for_subject($subject)
+=cut
 
-Clears the stack of all messages of subject $subject.
+sub reset_scope {
+    my ($self, $scope) = @_;
 
-=head2 reset_for_level($level)
+    return 0 unless $self->has_messages;
+
+    my $filtered;
+    foreach my $message (@{$self->messages}) {
+        next if($message->scope eq $scope);
+        push @{$filtered}, $message;
+    }
+
+    $self->messages($filtered);
+}
+
+=method reset_level($level)
 
 Clears the stack of all messages of level $level.
 
-=head2 reset_for_msgid($msgid)
+=cut
+
+sub reset_level {
+    my ($self, $level) = @_;
+
+    return 0 unless $self->has_messages;
+
+    my $filtered;
+    foreach my $message (@{$self->messages}) {
+        next if($message->level eq $level);
+        push @{$filtered}, $message;
+    }
+
+    $self->messages($filtered);
+}
+
+=method reset_msgid($msgid)
 
 Clears the stack of all messages of msgid $msgid.
 
-=head2 reset
+=cut
 
-Clear all messages, resetting this stack.
+sub reset_msgid {
+    my ($self, $msgid) = @_;
 
-=head1 AUTHOR
+    return 0 unless $self->has_messages;
 
-Cory G Watson, C<< <gphat at cpan.org> >>
+    my $filtered;
+    foreach my $message (@{$self->messages}) {
+        next if($message->msgid eq $msgid);
+        push @{$filtered}, $message;
+    }
+
+    $self->messages($filtered);
+}
+
+=method reset_subject($subject)
+
+Clears the stack of all messages of subject $subject.
+
+=cut
+
+sub reset_subject {
+    my ($self, $subject) = @_;
+
+    return 0 unless $self->has_messages;
+
+    my $filtered;
+    foreach my $message (@{$self->messages}) {
+        next if($message->subject eq $subject);
+        push @{$filtered}, $message;
+    }
+
+    $self->messages($filtered);
+}
+
+=begin :postlude
 
 =head1 CONTRIBUTORS
 
@@ -352,9 +374,12 @@ Jon Wright
 
 Mike Eldridge
 
-=head1 COPYRIGHT & LICENSE
+Andrew Nelson
 
-Copyright 2010 Cory G Watson, all rights reserved.
+=end :postlude
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+=cut
+
+__PACKAGE__->meta->make_immutable;
+no Moose;
+1;
