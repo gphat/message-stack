@@ -291,7 +291,7 @@ sub reset_scope {
 
     return 0 unless $self->has_messages;
 
-    my $filtered;
+    my $filtered = [];
     foreach my $message (@{$self->messages}) {
         next if($message->scope eq $scope);
         push @{$filtered}, $message;
@@ -311,7 +311,7 @@ sub reset_level {
 
     return 0 unless $self->has_messages;
 
-    my $filtered;
+    my $filtered = [];
     foreach my $message (@{$self->messages}) {
         next if($message->level eq $level);
         push @{$filtered}, $message;
@@ -331,7 +331,7 @@ sub reset_msgid {
 
     return 0 unless $self->has_messages;
 
-    my $filtered;
+    my $filtered = [];
     foreach my $message (@{$self->messages}) {
         next if($message->msgid eq $msgid);
         push @{$filtered}, $message;
@@ -351,7 +351,7 @@ sub reset_subject {
 
     return 0 unless $self->has_messages;
 
-    my $filtered;
+    my $filtered = [];
     foreach my $message (@{$self->messages}) {
         next if($message->subject eq $subject);
         push @{$filtered}, $message;
