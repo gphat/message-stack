@@ -1,6 +1,8 @@
 Revision history for Message-Stack
 
 {{$NEXT}}
+
+0.22 Aug 6 2011
   - Fix bug in reset_* methods that violated type constraints if no messages
     survived the reset. (Tomohiro Hosaka)
 
