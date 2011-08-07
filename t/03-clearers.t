@@ -59,6 +59,7 @@ $msgid_stack->add($msg2);
 cmp_ok($msgid_stack->count, '==', 2, 'Two in the msgid stack before');
 $msgid_stack->reset_msgid('messagetwo');
 cmp_ok($msgid_stack->count, '==', 1, 'One in the msgid stack after');
-
+$msgid_stack->reset_msgid('messageone');
+cmp_ok($msgid_stack->count, '==', 0, 'Zero in the msgid stack after');
 
 done_testing;
