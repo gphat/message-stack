@@ -1,9 +1,11 @@
 Revision history for Message-Stack
 
 {{$NEXT}}
-  - Use GPHAT dzil bundle
+  - Fix bug in reset_* methods that violated type constraints if no messages
+    survived the reset. (Tomohiro Hosaka)
 
 0.21 Jul 8 2011
+  - Use GPHAT dzil bundle
   - Add reset_* methods (holophrastic)
   - Convert to Dist::Zilla and Pod::Weaver
 
